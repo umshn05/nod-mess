@@ -5,8 +5,9 @@ const TYPE_LABELS = {
   otopark: "Otopark",
 };
 
-// Ana sayfadaki lokasyon listesinde bir satırı temsil eder.
-export default function LocationCard({ location }) {
+// Ana sayfa ve Harita/Liste ekranındaki lokasyon listesinde bir satırı temsil eder.
+// `availability` verilirse (total_devices/available_devices) müsaitlik rozeti de gösterilir.
+export default function LocationCard({ location, availability }) {
   return (
     <Card>
       <div className="flex items-start justify-between gap-3">
@@ -20,7 +21,20 @@ export default function LocationCard({ location }) {
       </div>
       <div className="mt-3 flex items-center justify-between text-xs text-muted">
         <span>{location.working_hours}</span>
-        <span className="font-medium text-white">{location.distance_km} km</span>
+        <span className="flex items-center gap-2">
+          {availability && (
+            <span
+              className={
+                availability.available_devices > 0
+                  ? "font-medium text-lime"
+                  : "font-medium text-muted"
+              }
+            >
+              {availability.available_devices}/{availability.total_devices} müsait
+            </span>
+          )}
+          <span className="font-medium text-white">{location.distance_km} km</span>
+        </span>
       </div>
     </Card>
   );

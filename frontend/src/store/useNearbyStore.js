@@ -1,17 +1,19 @@
 import { create } from "zustand";
-import { getNearbyLocations } from "../lib/api";
+import { getNearbyLocations, getLocationAvailability } from "../lib/api";
 
 // İstanbul merkez - konum izni verilmediğinde kullanılan varsayılan nokta
 const FALLBACK_POSITION = { lat: 41.0082, lng: 28.9784 };
 
-// Ana sayfadaki "yakındaki lokasyonlar" akışının durumunu tutan store.
-// Konum, yükleniyor/hata durumları ve lokasyon listesi burada saklanır.
+// Ana Sayfa ve Harita/Liste ekranının paylaştığı "yakındaki lokasyonlar" durumu.
+// Konum, yükleniyor/hata durumları, lokasyon listesi ve müsaitlik bilgisi burada saklanır.
 export const useNearbyStore = create((set, get) => ({
   userPosition: null,
   usingFallback: false,
   locations: [],
   status: "idle", // idle | loading | success | error
   errorMessage: null,
+  // Lokasyon id'sine göre { total_devices, available_devices }
+  availabilityByLocation: {},
 
   async requestUserLocation() {
     set({ status: "loading", errorMessage: null });
@@ -42,8 +44,25 @@ export const useNearbyStore = create((set, get) => ({
     try {
       const locations = await getNearbyLocations({ lat: position.lat, lng: position.lng });
       set({ locations, status: "success" });
+      get().fetchAvailability(locations);
     } catch (err) {
       set({ status: "error", errorMessage: err.message });
     }
+  },
+
+  // Her lokasyon için müsaitlik özetini ayrı ayrı getirir (liste yüklendikten sonra, arka planda).
+  async fetchAvailability(locations) {
+    const results = await Promise.allSettled(
+      locations.map((loc) => getLocationAvailability(loc.id))
+    );
+    const availabilityByLocation = {};
+    results.forEach((result, index) => {
+      if (result.status === "fulfilled") {
+        availabilityByLocation[locations[index].id] = result.value;
+      }
+    });
+    set((state) => ({
+      availabilityByLocation: { ...state.availabilityByLocation, ...availabilityByLocation },
+    }));
   },
 }));

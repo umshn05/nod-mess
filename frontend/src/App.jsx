@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import BottomNav from "./components/BottomNav";
 import Home from "./pages/Home";
+import MapList from "./pages/MapList";
 import ComingSoon from "./pages/ComingSoon";
 
 export default function App() {
@@ -11,7 +12,7 @@ export default function App() {
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/harita" element={<ComingSoon title="Harita" />} />
+          <Route path="/harita" element={<MapList />} />
           <Route path="/kiralamalarim" element={<ComingSoon title="Kiralamalarım" />} />
         </Routes>
         <BottomNav />

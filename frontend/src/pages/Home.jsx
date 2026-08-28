@@ -5,7 +5,8 @@ import LocationCard from "../components/LocationCard";
 import Button from "../components/Button";
 
 export default function Home() {
-  const { status, locations, usingFallback, errorMessage, requestUserLocation } = useNearbyStore();
+  const { status, locations, usingFallback, errorMessage, requestUserLocation, availabilityByLocation } =
+    useNearbyStore();
 
   useEffect(() => {
     requestUserLocation();
@@ -49,7 +50,13 @@ export default function Home() {
         )}
 
         {status === "success" &&
-          locations.map((location) => <LocationCard key={location.id} location={location} />)}
+          locations.map((location) => (
+            <LocationCard
+              key={location.id}
+              location={location}
+              availability={availabilityByLocation[location.id]}
+            />
+          ))}
       </div>
     </div>
   );
