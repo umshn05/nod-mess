@@ -69,6 +69,62 @@ LOCATIONS = [
         "working_hours": "07:00-23:00",
         "status": "active",
     },
+    # Aşağıdaki lokasyonlar, Türkiye'nin farklı coğrafi bölgelerini temsil eder;
+    # demo hangi şehirden açılırsa açılsın yakında bir sonuç çıksın diye eklendi.
+    {
+        "name": "Kocaeli İzmit Merkez Otoparkı",
+        "type": "otopark",
+        "lat": 40.7654,
+        "lng": 29.9408,
+        "address": "Cumhuriyet Cad., İzmit, Kocaeli",
+        "working_hours": "07:00-23:00",
+        "status": "active",
+    },
+    {
+        "name": "İzmir Alsancak Otoparkı",
+        "type": "otopark",
+        "lat": 38.4237,
+        "lng": 27.1428,
+        "address": "Kıbrıs Şehitleri Cad., Alsancak, İzmir",
+        "working_hours": "07:00-24:00",
+        "status": "active",
+    },
+    {
+        "name": "Antalya Konyaaltı Otoparkı",
+        "type": "otopark",
+        "lat": 36.8563,
+        "lng": 30.6624,
+        "address": "Atatürk Bulvarı, Konyaaltı, Antalya",
+        "working_hours": "08:00-24:00",
+        "status": "active",
+    },
+    {
+        "name": "Ankara Kızılay AVM Otoparkı",
+        "type": "avm",
+        "lat": 39.9208,
+        "lng": 32.8541,
+        "address": "Atatürk Bulvarı, Kızılay, Ankara",
+        "working_hours": "10:00-22:00",
+        "status": "active",
+    },
+    {
+        "name": "Erzurum Merkez Otoparkı",
+        "type": "otopark",
+        "lat": 39.9000,
+        "lng": 41.2700,
+        "address": "Cumhuriyet Cad., Yakutiye, Erzurum",
+        "working_hours": "07:00-23:00",
+        "status": "active",
+    },
+    {
+        "name": "Diyarbakır Merkez Otoparkı",
+        "type": "otopark",
+        "lat": 37.9144,
+        "lng": 40.2306,
+        "address": "Gazi Cad., Sur, Diyarbakır",
+        "working_hours": "07:00-23:00",
+        "status": "active",
+    },
 ]
 
 # Her lokasyona eklenecek cihaz şablonları (2-3 adet/lokasyon)
