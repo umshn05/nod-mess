@@ -1,9 +1,5 @@
 """
 Reservation (rezervasyon) modeli.
-
-Not: Rezervasyon/kiralama akışının endpoint'leri (POST /reservations,
-confirm-payment, checkin/validate, rentals/*) bir sonraki aşamada eklenecek.
-Bu dosya, veri modelinin tamamının baştan tanımlı olması için hazırlandı.
 """
 from datetime import datetime
 
@@ -38,3 +34,13 @@ class Reservation(BaseModel):
     status: ReservationStatus = ReservationStatus.DRAFT
     price_snapshot: PriceSnapshot
     created_at: datetime
+    # Ödeme onaylandıktan sonra üretilir; QR kodun içeriği bu token'dır.
+    checkin_token: str | None = None
+
+
+class ReservationCreate(BaseModel):
+    """POST /reservations isteğinin gövdesi."""
+    user_id: str
+    location_id: str
+    device_id: str
+    time_window: TimeWindow

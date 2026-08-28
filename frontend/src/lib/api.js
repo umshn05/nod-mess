@@ -41,3 +41,44 @@ export function getLocationAvailability(locationId) {
 export function getLocationDevices(locationId) {
   return request(`/locations/${locationId}/devices`);
 }
+
+// Yeni bir rezervasyon oluşturur (DRAFT -> RESERVED)
+export function createReservation({ userId, locationId, deviceId, startAt, endAt }) {
+  return request("/reservations", {
+    method: "POST",
+    body: JSON.stringify({
+      user_id: userId,
+      location_id: locationId,
+      device_id: deviceId,
+      time_window: { start_at: startAt, end_at: endAt },
+    }),
+  });
+}
+
+// Bir rezervasyonun güncel durumunu getirir
+export function getReservation(reservationId) {
+  return request(`/reservations/${reservationId}`);
+}
+
+// MOCK: kart tahsilatını simüle eder, rezervasyonu check-in için hazırlar
+export function confirmPayment(reservationId) {
+  return request(`/reservations/${reservationId}/confirm-payment`, { method: "POST" });
+}
+
+// MOCK: QR kodun taranmasını simüle eder, rezervasyonu ACTIVE'e taşır ve kiralama başlatır
+export function validateCheckin(checkinToken) {
+  return request("/checkin/validate", {
+    method: "POST",
+    body: JSON.stringify({ checkin_token: checkinToken }),
+  });
+}
+
+// Aktif bir kiralamanın canlı süre/ücret durumunu getirir
+export function getRentalStatus(rentalId) {
+  return request(`/rentals/${rentalId}/status`);
+}
+
+// Cihazı iade eder, nihai ücreti hesaplar ve makbuz döner
+export function returnRental(rentalId) {
+  return request(`/rentals/${rentalId}/return`, { method: "POST" });
+}

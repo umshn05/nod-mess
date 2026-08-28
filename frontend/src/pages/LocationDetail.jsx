@@ -16,7 +16,6 @@ export default function LocationDetail() {
   const [status, setStatus] = useState("loading"); // loading | success | error
   const [errorMessage, setErrorMessage] = useState(null);
   const [selectedDeviceId, setSelectedDeviceId] = useState(null);
-  const [continueMessage, setContinueMessage] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -86,10 +85,7 @@ export default function LocationDetail() {
                 key={device.id}
                 device={device}
                 selected={device.id === selectedDeviceId}
-                onSelect={() => {
-                  setSelectedDeviceId(device.id);
-                  setContinueMessage(null);
-                }}
+                onSelect={() => setSelectedDeviceId(device.id)}
               />
             ))}
           </div>
@@ -98,16 +94,13 @@ export default function LocationDetail() {
 
       {selectedDevice && (
         <div className="fixed inset-x-0 bottom-16 z-10 mx-auto max-w-md border-t border-border bg-surface px-4 py-3">
-          {continueMessage && <p className="mb-2 text-xs text-lime">{continueMessage}</p>}
           <div className="mb-2 flex items-center justify-between text-sm">
             <span className="text-muted">{selectedDevice.model}</span>
             <span className="font-semibold text-white">
               {selectedDevice.hourly_fee}₺/saat · {selectedDevice.daily_fee}₺/gün
             </span>
           </div>
-          <Button onClick={() => setContinueMessage("Rezervasyon akışı bir sonraki adımda eklenecek.")}>
-            Devam Et
-          </Button>
+          <Button onClick={() => navigate(`/rezervasyon/${id}/${selectedDevice.id}`)}>Devam Et</Button>
         </div>
       )}
     </div>

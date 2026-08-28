@@ -4,6 +4,10 @@ import BottomNav from "./components/BottomNav";
 import Home from "./pages/Home";
 import MapList from "./pages/MapList";
 import LocationDetail from "./pages/LocationDetail";
+import ReservationSummary from "./pages/ReservationSummary";
+import PaymentMock from "./pages/PaymentMock";
+import QrCheckin from "./pages/QrCheckin";
+import ActiveRental from "./pages/ActiveRental";
 import ComingSoon from "./pages/ComingSoon";
 
 export default function App() {
@@ -15,6 +19,10 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/harita" element={<MapList />} />
           <Route path="/lokasyon/:id" element={<LocationDetail />} />
+          <Route path="/rezervasyon/:locationId/:deviceId" element={<ReservationSummary />} />
+          <Route path="/odeme/:reservationId" element={<PaymentMock />} />
+          <Route path="/qr/:reservationId" element={<QrCheckin />} />
+          <Route path="/kiralama/:rentalId" element={<ActiveRental />} />
           <Route path="/kiralamalarim" element={<ComingSoon title="Kiralamalarım" />} />
         </Routes>
         <BottomNav />

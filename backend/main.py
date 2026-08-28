@@ -12,7 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
 from app.db.mongo import close_mongo_connection, connect_to_mongo
-from app.routers import locations
+from app.routers import checkin, locations, rentals, reservations
 
 
 @asynccontextmanager
@@ -41,6 +41,9 @@ app.add_middleware(
 )
 
 app.include_router(locations.router)
+app.include_router(reservations.router)
+app.include_router(checkin.router)
+app.include_router(rentals.router)
 
 
 @app.get("/health", tags=["health"])
