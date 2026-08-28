@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import Card from "./Card";
 
 const TYPE_LABELS = {
@@ -7,9 +8,12 @@ const TYPE_LABELS = {
 
 // Ana sayfa ve Harita/Liste ekranındaki lokasyon listesinde bir satırı temsil eder.
 // `availability` verilirse (total_devices/available_devices) müsaitlik rozeti de gösterilir.
+// Karta tıklanınca lokasyonun detay sayfasına yönlendirir.
 export default function LocationCard({ location, availability }) {
+  const navigate = useNavigate();
+
   return (
-    <Card>
+    <Card onClick={() => navigate(`/lokasyon/${location.id}`)}>
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="font-semibold text-white">{location.name}</p>

@@ -7,6 +7,7 @@ from fastapi import APIRouter, HTTPException, Query
 
 from app.db.mongo import get_database
 from app.models.common import DeviceStatus
+from app.models.device import Device
 from app.models.location import Location, LocationAvailability, LocationWithDistance
 
 router = APIRouter(prefix="/locations", tags=["locations"])
@@ -72,3 +73,16 @@ async def get_location_availability(location_id: str):
         total_devices=total_devices,
         available_devices=available_devices,
     )
+
+
+@router.get("/{location_id}/devices", response_model=list[Device])
+async def get_location_devices(location_id: str):
+    """Bir lokasyondaki tüm cihazları (durumu ne olursa olsun) döner.
+    Frontend, müsait olmayanları da gösterip devre dışı bırakarak listeler."""
+    db = get_database()
+    location_doc = await db.locations.find_one({"id": location_id})
+    if location_doc is None:
+        raise HTTPException(status_code=404, detail="Lokasyon bulunamadı")
+
+    cursor = db.devices.find({"location_id": location_id})
+    return [Device(**doc) async for doc in cursor]

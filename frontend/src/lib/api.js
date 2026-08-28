@@ -36,3 +36,8 @@ export function getLocationById(locationId) {
 export function getLocationAvailability(locationId) {
   return request(`/locations/${locationId}/availability`);
 }
+
+// Bir lokasyondaki tüm cihazları (durumlarıyla birlikte) getirir
+export function getLocationDevices(locationId) {
+  return request(`/locations/${locationId}/devices`);
+}
