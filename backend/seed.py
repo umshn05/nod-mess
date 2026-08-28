@@ -60,6 +60,15 @@ LOCATIONS = [
         "working_hours": "07:00-01:00",
         "status": "active",
     },
+    {
+        "name": "Amasya Merkez Otoparkı",
+        "type": "otopark",
+        "lat": 40.6499,
+        "lng": 35.8353,
+        "address": "Atatürk Cad., Merkez, Amasya",
+        "working_hours": "07:00-23:00",
+        "status": "active",
+    },
 ]
 
 # Her lokasyona eklenecek cihaz şablonları (2-3 adet/lokasyon)
