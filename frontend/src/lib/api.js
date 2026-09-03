@@ -17,8 +17,11 @@ async function request(path, options = {}) {
   return response.json();
 }
 
-// Kullanıcının konumuna yakın lokasyonları getirir
-export function getNearbyLocations({ lat, lng, radiusKm = 15 }) {
+// Kullanıcının konumuna yakın lokasyonları getirir.
+// Demo verisi Türkiye geneline yayıldığı için varsayılan yarıçap, ülkenin
+// tamamını kapsayacak kadar büyük tutuldu (aksi halde sadece en yakın
+// şehirdeki lokasyonlar dönerdi).
+export function getNearbyLocations({ lat, lng, radiusKm = 2000 }) {
   const params = new URLSearchParams({
     lat: String(lat),
     lng: String(lng),
