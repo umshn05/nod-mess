@@ -15,6 +15,7 @@ export default function MapList() {
     status,
     locations,
     userPosition,
+    usingFallback,
     availabilityByLocation,
     errorMessage,
     requestUserLocation,
@@ -39,6 +40,15 @@ export default function MapList() {
     <div className="px-4 pb-24 pt-4">
       <h2 className="text-xl font-bold text-white">Harita &amp; Liste</h2>
       <p className="mt-1 text-sm text-muted">Yakındaki lokasyonları haritada veya listede incele.</p>
+
+      {usingFallback && (
+        <div className="mt-4 flex items-center justify-between gap-3 rounded-xl border border-border bg-surface px-4 py-3 text-sm text-muted">
+          <span>Konum izni alınamadı, İstanbul merkezli sonuçlar gösteriliyor.</span>
+          <button onClick={requestUserLocation} className="shrink-0 font-semibold text-lime">
+            Tekrar Dene
+          </button>
+        </div>
+      )}
 
       <div className="mt-4 flex gap-2">
         <button

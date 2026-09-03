@@ -1,4 +1,5 @@
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { useEffect } from "react";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
 import L from "leaflet";
 
@@ -24,22 +25,41 @@ const userIcon = L.divIcon({
   iconAnchor: [7, 7],
 });
 
+// Haritanın görünür alanını, tüm pin'ler (ve varsa kullanıcı konumu) ekrana
+// sığacak şekilde otomatik ayarlar. Sabit bir zoom kullanılsaydı, arama
+// yarıçapı geniş olduğunda uzak lokasyonlar görünür alanın dışında kalırdı.
+function FitBounds({ points }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (points.length === 0) return;
+    if (points.length === 1) {
+      map.setView(points[0], 13);
+      return;
+    }
+    map.fitBounds(L.latLngBounds(points), { padding: [32, 32], maxZoom: 14 });
+  }, [points, map]);
+
+  return null;
+}
+
 // Yakındaki lokasyonları OpenStreetMap üzerinde pin olarak gösteren harita bileşeni.
 export default function LocationMap({ locations, userPosition, availabilityByLocation }) {
   const navigate = useNavigate();
-  const center = userPosition
-    ? [userPosition.lat, userPosition.lng]
-    : locations[0]
-      ? [locations[0].lat, locations[0].lng]
-      : [41.0082, 28.9784];
+  const fallbackCenter = [41.0082, 28.9784];
+  const points = [
+    ...(userPosition ? [[userPosition.lat, userPosition.lng]] : []),
+    ...locations.map((l) => [l.lat, l.lng]),
+  ];
 
   return (
     <MapContainer
-      center={center}
+      center={points[0] ?? fallbackCenter}
       zoom={12}
       scrollWheelZoom={true}
       className="h-[60vh] w-full rounded-2xl border border-border"
     >
+      <FitBounds points={points} />
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
