@@ -5,10 +5,11 @@ import math
 import uuid
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
 
 from app.db.mongo import get_database
 from app.models.common import DeviceStatus, ReservationStatus
+from app.models.rental import Rental
 from app.models.reservation import PriceSnapshot, Reservation, ReservationCreate
 
 router = APIRouter(prefix="/reservations", tags=["reservations"])
@@ -68,6 +69,14 @@ async def create_reservation(payload: ReservationCreate):
     return reservation
 
 
+@router.get("", response_model=list[Reservation])
+async def list_reservations(user_id: str = Query(..., description="Kullanıcı id'si")):
+    """Bir kullanıcının tüm rezervasyon geçmişini (en yeniden en eskiye) döner."""
+    db = get_database()
+    cursor = db.reservations.find({"user_id": user_id}).sort("created_at", -1)
+    return [Reservation(**doc) async for doc in cursor]
+
+
 @router.get("/{reservation_id}", response_model=Reservation)
 async def get_reservation(reservation_id: str):
     """Bir rezervasyonun güncel durumunu döner."""
@@ -101,3 +110,36 @@ async def confirm_payment(reservation_id: str):
     reservation.status = ReservationStatus.CHECKIN_PENDING
     reservation.checkin_token = checkin_token
     return reservation
+
+
+@router.post("/{reservation_id}/cancel", response_model=Reservation)
+async def cancel_reservation(reservation_id: str):
+    """Henüz check-in yapılmamış bir rezervasyonu iptal eder ve cihazı tekrar müsait yapar."""
+    db = get_database()
+    doc = await db.reservations.find_one({"id": reservation_id})
+    if doc is None:
+        raise HTTPException(status_code=404, detail="Rezervasyon bulunamadı")
+
+    reservation = Reservation(**doc)
+    if reservation.status not in (ReservationStatus.RESERVED, ReservationStatus.CHECKIN_PENDING):
+        raise HTTPException(status_code=409, detail="Bu rezervasyon iptal edilemez")
+
+    await db.reservations.update_one(
+        {"id": reservation_id}, {"$set": {"status": ReservationStatus.CANCELLED.value}}
+    )
+    await db.devices.update_one(
+        {"id": reservation.device_id}, {"$set": {"status": DeviceStatus.AVAILABLE.value}}
+    )
+
+    reservation.status = ReservationStatus.CANCELLED
+    return reservation
+
+
+@router.get("/{reservation_id}/rental", response_model=Rental)
+async def get_reservation_rental(reservation_id: str):
+    """Bir rezervasyona bağlı kiralama kaydını döner (check-in yapıldıysa mevcuttur)."""
+    db = get_database()
+    doc = await db.rentals.find_one({"reservation_id": reservation_id})
+    if doc is None:
+        raise HTTPException(status_code=404, detail="Bu rezervasyona ait bir kiralama bulunamadı")
+    return Rental(**doc)

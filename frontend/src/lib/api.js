@@ -60,6 +60,21 @@ export function getReservation(reservationId) {
   return request(`/reservations/${reservationId}`);
 }
 
+// Bir kullanıcının tüm rezervasyon geçmişini getirir
+export function listReservations(userId) {
+  return request(`/reservations?user_id=${encodeURIComponent(userId)}`);
+}
+
+// Henüz check-in yapılmamış bir rezervasyonu iptal eder
+export function cancelReservation(reservationId) {
+  return request(`/reservations/${reservationId}/cancel`, { method: "POST" });
+}
+
+// Rezervasyona bağlı kiralama kaydını getirir (check-in yapıldıysa mevcuttur)
+export function getReservationRental(reservationId) {
+  return request(`/reservations/${reservationId}/rental`);
+}
+
 // MOCK: kart tahsilatını simüle eder, rezervasyonu check-in için hazırlar
 export function confirmPayment(reservationId) {
   return request(`/reservations/${reservationId}/confirm-payment`, { method: "POST" });

@@ -8,7 +8,7 @@ import ReservationSummary from "./pages/ReservationSummary";
 import PaymentMock from "./pages/PaymentMock";
 import QrCheckin from "./pages/QrCheckin";
 import ActiveRental from "./pages/ActiveRental";
-import ComingSoon from "./pages/ComingSoon";
+import Kiralamalarim from "./pages/Kiralamalarim";
 
 export default function App() {
   return (
@@ -23,7 +23,7 @@ export default function App() {
           <Route path="/odeme/:reservationId" element={<PaymentMock />} />
           <Route path="/qr/:reservationId" element={<QrCheckin />} />
           <Route path="/kiralama/:rentalId" element={<ActiveRental />} />
-          <Route path="/kiralamalarim" element={<ComingSoon title="Kiralamalarım" />} />
+          <Route path="/kiralamalarim" element={<Kiralamalarim />} />
         </Routes>
         <BottomNav />
       </div>

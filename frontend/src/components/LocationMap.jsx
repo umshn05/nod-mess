@@ -1,4 +1,5 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { useNavigate } from "react-router-dom";
 import L from "leaflet";
 
 const TYPE_LABELS = { avm: "AVM", otopark: "Otopark" };
@@ -25,6 +26,7 @@ const userIcon = L.divIcon({
 
 // Yakındaki lokasyonları OpenStreetMap üzerinde pin olarak gösteren harita bileşeni.
 export default function LocationMap({ locations, userPosition, availabilityByLocation }) {
+  const navigate = useNavigate();
   const center = userPosition
     ? [userPosition.lat, userPosition.lng]
     : locations[0]
@@ -69,6 +71,12 @@ export default function LocationMap({ locations, userPosition, availabilityByLoc
                   </p>
                 )}
                 <p>{location.distance_km} km uzaklıkta</p>
+                <button
+                  onClick={() => navigate(`/lokasyon/${location.id}`)}
+                  className="mt-2 font-semibold text-lime-dark underline"
+                >
+                  Detayları Gör
+                </button>
               </div>
             </Popup>
           </Marker>
